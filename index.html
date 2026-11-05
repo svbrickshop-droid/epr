@@ -134,6 +134,20 @@ td .pill { margin-bottom: 4px; }
 .small { font-size: 14px; color: var(--muted); }
 .noresults { padding: 16px; color: var(--muted); }
 
+.picker { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.picker label { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.picker select { font: 16px var(--font-body); padding: 8px 12px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--paper); color: var(--ink); min-width: 0; width: min(320px, 100%); }
+@media (max-width: 640px) {
+  .tscroll { overflow-x: visible; background: transparent; border: 0; }
+  table { min-width: 0; }
+  thead { display: none; }
+  tbody, tbody tr, tbody td { display: block; }
+  tbody tr { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; }
+  tbody tr.on { box-shadow: inset 4px 0 0 var(--sel); }
+  td { border: 0; padding: 4px 0; }
+  td.c { font-family: var(--font-display); font-size: 20px; font-weight: 800; white-space: normal; }
+  td[data-l]::before { content: attr(data-l); display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+}
 .foot { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 24px; border-top: 2px solid var(--ink); padding-top: 20px; }
 @media (max-width: 800px) { .foot { grid-template-columns: 1fr; } }
 .foot h2 { font-family: var(--font-display); font-weight: 800; font-size: 20px; margin: 0 0 8px; }
@@ -164,6 +178,11 @@ td .pill { margin-bottom: 4px; }
 
   <div class="legend" role="group" aria-label="Filter by small-seller threshold">
     <span class="legend-title">Small-seller threshold</span>
+  </div>
+
+  <div class="picker">
+    <label for="pick">Jump to a country</label>
+    <select id="pick"><option value="">Choose a country</option></select>
   </div>
 
   <section class="stage">
@@ -466,6 +485,12 @@ const legend = document.querySelector(".legend");
   legend.appendChild(b);
 });
 
+const narrow = () => window.matchMedia("(max-width: 900px)").matches;
+function reveal(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+}
+
 /* ---------- map ---------- */
 const NS = "http://www.w3.org/2000/svg";
 const svg = document.getElementById("map");
@@ -480,7 +505,7 @@ function bindShape(el, k) {
   el.setAttribute("tabindex", "0");
   el.setAttribute("role", "button");
   el.setAttribute("aria-label", `${C[k].n}: ${STATUS[C[k].s].label}`);
-  el.addEventListener("click", () => select(k, true));
+  el.addEventListener("click", () => { select(k, true); if (narrow()) reveal("panel"); });
   el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(k, true); } });
   el.addEventListener("mousemove", e => {
     const r = box.getBoundingClientRect();
@@ -522,11 +547,11 @@ ORDER.forEach(k => {
   const tr = document.createElement("tr");
   tr.tabIndex = 0;
   tr.innerHTML = `<td class="c">${esc(c.n)}</td>
-    <td>${pill(c.s)}<div class="small">${esc(c.thr)}</div></td>
-    <td>${esc(c.cost)}</td>
-    <td>${esc(c.rep)}</td>
-    <td>${c.schemes.map(link).join("<br>")}</td>`;
-  tr.addEventListener("click", e => { if (e.target.closest("a")) return; select(k, true); document.getElementById("mapbox").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); });
+    <td data-l="Small-seller threshold">${pill(c.s)}<div class="small">${esc(c.thr)}</div></td>
+    <td data-l="Fixed costs">${esc(c.cost)}</td>
+    <td data-l="Reporting">${esc(c.rep)}</td>
+    <td data-l="Scheme(s)">${c.schemes.map(link).join("<br>")}</td>`;
+  tr.addEventListener("click", e => { if (e.target.closest("a")) return; select(k, true); reveal(narrow() ? "panel" : "mapbox"); });
   tr.addEventListener("keydown", e => { if (e.key === "Enter") select(k, true); });
   tbody.appendChild(tr);
   rows[k] = tr;
@@ -552,9 +577,15 @@ function renderPanel(k) {
     <p class="src">Source: ${esc(c.src)}</p>`;
 }
 
+/* ---------- country picker ---------- */
+const pick = document.getElementById("pick");
+ORDER.forEach(k => { const o = document.createElement("option"); o.value = k; o.textContent = C[k].n; pick.appendChild(o); });
+pick.addEventListener("change", () => { if (pick.value) { select(pick.value, true); if (narrow()) reveal("panel"); } else select(null, false); });
+
 /* ---------- selection & filters ---------- */
 function select(k, push) {
   selected = k;
+  pick.value = k || "";
   Object.entries(shapes).forEach(([key, els]) => els.forEach(el => el.classList.toggle("on", key === k)));
   Object.entries(rows).forEach(([key, tr]) => tr.classList.toggle("on", key === k));
   renderPanel(k);
