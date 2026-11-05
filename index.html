@@ -589,6 +589,7 @@ function select(k, push) {
   Object.entries(shapes).forEach(([key, els]) => els.forEach(el => el.classList.toggle("on", key === k)));
   Object.entries(rows).forEach(([key, tr]) => tr.classList.toggle("on", key === k));
   renderPanel(k);
+  if (push && k && typeof window.trackCountry === "function") { try { window.trackCountry(k, C[k].n); } catch (e) {} }
   if (push) { try { history.replaceState(null, "", "#" + k.toLowerCase()); } catch (e) { location.hash = k.toLowerCase(); } }
 }
 const q = document.getElementById("q");
@@ -615,6 +616,21 @@ function fromHash() {
 window.addEventListener("hashchange", fromHash);
 fromHash();
 </script>
+
+<script>
+// GoatCounter: count which countries visitors open (event per country)
+window.trackCountry = function (code, name) {
+  var tries = 0;
+  var t = setInterval(function () {
+    tries++;
+    if (window.goatcounter && window.goatcounter.count) {
+      clearInterval(t);
+      window.goatcounter.count({ path: "country-" + code.toLowerCase(), title: name, event: true });
+    } else if (tries > 50) { clearInterval(t); }
+  }, 100);
+};
+</script>
+<script data-goatcounter="https://svbrickshop.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 </body>
 </html>
