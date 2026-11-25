@@ -180,7 +180,7 @@ td .pill { margin-bottom: 4px; }
       <p class="lede">What a small online seller from another EU country runs into when shipping parcels to consumers in each member state: the packaging scheme, whether there is a minimum quantity, and what it costs to stay compliant.</p>
     </div>
     <div class="label-side">
-      <div class="stamp">Last checked<b>17 Nov 2026</b>27 member states</div>
+      <div class="stamp">Last checked<b>25 Nov 2026</b>27 member states</div>
       <div class="barcode" aria-hidden="true"></div>
     </div>
   </header>
@@ -350,14 +350,14 @@ const C = {
     rep: "Regular quantity reports; frequency not published.",
     notes: "Companies without a Greek establishment generally cannot register themselves and need a representative.",
     src: "WKO (31 Jul 2026)" },
-  HU: { n: "Hungary", s: "unclear",
-    thr: "No threshold published. The EPR fee applies from the first item placed on the market.",
+  HU: { n: "Hungary", s: "none",
+    thr: "None. Obligations start with the first item. If your yearly EPR fee stays under HUF 50,000, you may report once a year instead of every quarter.",
     schemes: [L("MOHU (state-organised, the only operator)", "https://mohu.hu/hu/epr-rendszer")],
-    reg: L("OKIR reporting system", "https://kapu.okir.hu/okirkapuugyfel/"),
-    cost: "EPR fee per item placed on the market. Amounts not published in our sources.",
-    rep: "Through OKIR; frequency not published.",
-    notes: "Foreign webshops can only comply through a Hungary-based representative with a Hungarian tax number.",
-    src: "WKO (28 Sep 2026)" },
+    reg: L("MOHU contract + OKIR registration", "https://oss.mohu.hu/"),
+    cost: "One-off MOHU enrolment fee plus EPR fees per kilo by material, invoiced by MOHU and payable within 15 days. Webshops can also owe the Hungarian product fee (green tax).",
+    rep: "Quarterly declarations by the 20th of the month after the quarter; yearly if your fee stays under HUF 50,000.",
+    notes: "Foreign webshops can only comply through a Hungary-based authorised representative. The authorities plan more inspections of online sellers in 2026.",
+    src: "Lappa; VATcompliance; Taxand; AHK Ungarn; Deloitte Hungary (2026); WKO (28 Sep 2026)" },
   IE: { n: "Ireland", s: "unclear",
     thr: "No official threshold published. One guide mentions 10 tonnes, which we could not confirm.",
     schemes: [L("Repak", "https://repak.ie/")],
@@ -414,14 +414,14 @@ const C = {
     rep: "Yearly declaration by 31 March, only above the threshold.",
     notes: "EU-based companies do not need a representative and can register with Verpact directly.",
     src: "WKO (2 Sep 2026); Verpact; Assuro (Oct 2026)" },
-  PL: { n: "Poland", s: "unclear",
-    thr: "No official threshold published. One guide mentions 1 tonne, which we could not confirm.",
+  PL: { n: "Poland", s: "none",
+    thr: "None. BDO registration is required from the first package, whatever the quantity.",
     schemes: [L("Recovery organisations (e.g. Rekopol)", "https://www.rekopol.pl/")],
-    reg: L("BDO register", "https://bdo.mos.gov.pl/"),
-    cost: "Packaging levy per kilo. Rates on the ministry's website.",
-    rep: "Through BDO; new reporting tools planned from 2028.",
-    notes: "A new law (draft UC100) would make the national environmental fund the scheme, with full EPR from 2028.",
-    src: "WKO (10 Aug 2026); Tarafex (Sep 2026)" },
+    reg: L("BDO register (foreign sellers via the Mazowieckie Marshal's Office, Warsaw)", "https://bdo.mos.gov.pl/"),
+    cost: "BDO registration plus packaging fees per kilo through a recovery organisation; a product fee applies if recycling targets are not met. Amounts not published in our sources.",
+    rep: "Yearly packaging report in BDO: the report for 2026 is due by 15 March 2027.",
+    notes: "Sellers without a Polish establishment must appoint a Poland-based authorised representative; the BDO portal is in Polish only. A new packaging law is in preparation, with full EPR planned from 2028.",
+    src: "Lappa; Certivo (2026); EcoPV; KPMG Poland; WKO (Aug 2026)" },
   PT: { n: "Portugal", s: "none",
     thr: "None. No quantity or turnover thresholds, and foreign distance sellers are explicitly covered.",
     schemes: [L("Sociedade Ponto Verde", "https://www.pontoverde.pt/"), L("Novo Verde", "https://novoverde.pt/en/home/")],
