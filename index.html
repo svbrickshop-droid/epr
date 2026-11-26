@@ -86,6 +86,10 @@ h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 
   .barcode { flex: 1; }
 }
 
+.byline { margin: 10px 0 0; max-width: 68ch; font-size: 14px; color: var(--muted); }
+.byline a { color: var(--ink); font-weight: 600; }
+.noneu { border: 2px solid var(--ink); background: var(--paper); padding: 12px 16px; margin: 0; max-width: 80ch; font-size: 14px; }
+.noneu b { display: block; font-size: 15px; margin-bottom: 4px; }
 .note { font-size: 14px; color: var(--muted); margin: 0; max-width: 80ch; }
 
 /* Legend + filters */
@@ -178,6 +182,7 @@ td .pill { margin-bottom: 4px; }
       <span class="eyebrow">PPWR · Regulation (EU) 2025/40 · packaging EPR</span>
       <h1>EU Packaging EPR Map</h1>
       <p class="lede">What a small online seller from another EU country runs into when shipping parcels to consumers in each member state: the packaging scheme, whether there is a minimum quantity, and what it costs to stay compliant.</p>
+      <p class="byline">Made by <a href="https://www.youtube.com/@svbrickshop" target="_blank" rel="noopener" onclick="try{window.goatcounter&&window.goatcounter.count({path:'click-youtube',title:'YouTube link',event:true})}catch(e){}">SV Brick Shop</a>, a small Belgian LEGO parts seller who stopped shipping to 25 EU countries because of these rules. The full story is on <a href="https://www.youtube.com/@svbrickshop" target="_blank" rel="noopener" onclick="try{window.goatcounter&&window.goatcounter.count({path:'click-youtube',title:'YouTube link',event:true})}catch(e){}">YouTube</a>.</p>
     </div>
     <div class="label-side">
       <div class="stamp">Last checked<b>25 Nov 2026</b>27 member states</div>
@@ -186,6 +191,8 @@ td .pill { margin-bottom: 4px; }
   </header>
 
   <p class="note">Since 12 August 2026 the PPWR applies in every EU country, and it has no EU-wide minimum quantity for registering. Countries are still adapting their national rules, so much of this is moving. This page is information, not legal advice: confirm the details with the scheme before you ship.</p>
+
+  <p class="noneu"><b>Selling from outside the EU (Switzerland, Norway, the UK...)?</b>This map is written for sellers based in another EU country, but the country details apply to you too. One difference: sellers from outside the EU must always appoint an authorised representative in every EU country they ship to. The relief now being negotiated in Brussels only covers sellers established in the EU, so it will not change this for you.</p>
 
   <div class="legend" role="group" aria-label="Filter by small-seller threshold">
     <span class="legend-title">Small-seller threshold</span>
@@ -484,6 +491,7 @@ const active = new Set();
 const legend = document.querySelector(".legend");
 ["none", "lighter", "exempt", "unclear"].forEach(s => {
   const n = ORDER.filter(k => C[k].s === s).length;
+  if (s === "unclear" && n === 0) return;
   const b = document.createElement("button");
   b.className = "chip"; b.type = "button"; b.id = "f-" + s;
   b.setAttribute("aria-pressed", "false");
@@ -574,7 +582,7 @@ function renderPanel(k) {
   if (!k) {
     panel.innerHTML = `<h2>Pick a country</h2>
       <p class="empty-panel">Select a country on the map or in the table to see its packaging scheme, threshold, costs and reporting.</p>
-      <div class="field"><h3>At a glance</h3><p>${ORDER.filter(x => C[x].s === "none").length} countries have no small-seller threshold, ${ORDER.filter(x => C[x].s === "lighter").length} have lighter rules below a set quantity, ${ORDER.filter(x => C[x].s === "exempt").length} exempts small quantities, and ${ORDER.filter(x => C[x].s === "unclear").length} have not published one yet.</p></div>`;
+      <div class="field"><h3>At a glance</h3><p>${ORDER.filter(x => C[x].s === "none").length} countries have no small-seller threshold, ${ORDER.filter(x => C[x].s === "lighter").length} have lighter rules below a set quantity, ${ORDER.filter(x => C[x].s === "exempt").length} exempts small quantities${ORDER.some(x => C[x].s === "unclear") ? `, and ${ORDER.filter(x => C[x].s === "unclear").length} have not published one yet` : ""}.</p></div>`;
     return;
   }
   const c = C[k];
